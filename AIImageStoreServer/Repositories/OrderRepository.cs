@@ -1,51 +1,69 @@
 ﻿using AIImageStoreServer.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace AIImageStoreServer.Repositories
 {
     public interface IOrderRepository
     {
-        Task<Order> AddOrder();
-        Task<Order> UpdateOrder();
-        Task<Order> DeleteOrder(int id);
+        Task<Boolean> AddOrder(Order order);
+        Task<Boolean> UpdateOrder(Order id);
+        Task<Boolean> DeleteOrder(int id);
         Task<Order> GetOrderById(int id);
 
     }
     public class OrderRepository : IOrderRepository
     {
         private readonly IOrderRepository _orderRepository;
-        public OrderRepository(IOrderRepository orderRepository)
+        private readonly RepositoryDBContext _dbContext;
+        public OrderRepository(IOrderRepository orderRepository, RepositoryDBContext dbContext)
         {
             _orderRepository = orderRepository;
+            _dbContext = dbContext;
         }
 
-        public Task<Order> AddOrder()
+        public async Task<Boolean> AddOrder(Order order)
         {
-            throw new NotImplementedException();
+            var orderAdded = await _dbContext.AddAsync(order);
+
+            if (orderAdded != null)
+                return true;
+            return false;
+
         }
 
-        public async Task<Order?> DeleteOrder(int id)
+        public async Task<Boolean> DeleteOrder(int id)
         {
-            var order  = await _orderRepository.DeleteOrderAsync(id);
-            if (order != null) 
-                return order;
+            var order = await _dbContext.Orders.SingleOrDefaultAsync(o => o.OrderId == id);
 
-            return null;
+            if (order != null)
+            {
+                _dbContext.Orders.Remove(order);
+                return true;
+
+            }
+            return false;
             
         }
 
-        public async Task<Order?> GetOrderById(int id)
+        public async Task<Order> GetOrderById(int id)
         {
-            var order = await _orderRepository.GetOrderById(id);
-            
-            if(order != null) 
-                return order;
+            return await _dbContext.Orders.SingleOrDefaultAsync(o => o.OrderId == id);
 
-            return null;
+            
         }
 
-        public Task<Order> UpdateOrder()
+        public async Task<Boolean> UpdateOrder(Order order)
         {
-            throw new NotImplementedException();
+            var previousOrder = await _dbContext.Orders.FindAsync(order.OrderId);
+            if (previousOrder != null)
+            {
+                previousOrder = order;
+                await _dbContext.SaveChangesAsync();
+
+                return true;
+            }
+
+            return false;
         }
     }
 }
