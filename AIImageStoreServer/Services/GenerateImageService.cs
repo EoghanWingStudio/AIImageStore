@@ -10,11 +10,9 @@ namespace AIImageStoreServer.Services
     }
     public class GenerateImageService : IGenerateImageService
     {
-        private readonly IImageRepository _imageRepository;
         private readonly AppSettings _appSettings;
-        GenerateImageService(ImageRepository imageRepositorty, IOptionsMonitor<AppSettings> appSettings)
+        public GenerateImageService(IOptionsMonitor<AppSettings> appSettings)
         {
-            _imageRepository= imageRepositorty;
             _appSettings = appSettings.CurrentValue;
         }
 

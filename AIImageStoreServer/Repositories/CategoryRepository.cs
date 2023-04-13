@@ -11,11 +11,9 @@ namespace AIImageStoreServer.Repositories
     public class CategoryRepository
         : ICategoryRepository
     {
-        private readonly ICategoryRepository _categoryRepository;
 
-        public CategoryRepository(ICategoryRepository categoryRepository)
+        public CategoryRepository()
         {
-            _categoryRepository = categoryRepository;   
         }
 
         public Task<IActionResult> AddCategory()

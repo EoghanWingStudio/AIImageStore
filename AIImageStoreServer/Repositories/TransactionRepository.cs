@@ -14,11 +14,11 @@ namespace AIImageStoreServer.Repositories
         Task DeleteAsync(int id);
     }
 
-    public class EcommerceRepository : ITransactionRepository
+    public class TransactionRepository : ITransactionRepository
     {
         private readonly AiImageStoreContext _context;
 
-        public EcommerceRepository(AiImageStoreContext context)
+        public TransactionRepository(AiImageStoreContext context)
         {
             _context = context;
         }

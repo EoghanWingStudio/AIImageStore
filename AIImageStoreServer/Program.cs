@@ -13,6 +13,12 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IGenerateImageService, GenerateImageService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<ICartRepository, CartRepository>();
+
+builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 builder.Services.AddScoped<IImageRepository, ImageRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
@@ -22,7 +28,7 @@ builder.Services.Configure<AppSettings>(
 var connectionString = builder.Configuration.GetConnectionString("dbConnection");
 
 builder.Services.AddDbContext<AiImageStoreContext>(options =>
-            options.UseSqlServer(connectionString));
+            options.UseMySQL(connectionString));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

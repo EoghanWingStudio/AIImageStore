@@ -10,6 +10,8 @@ public interface IUserRepository
     Task AddUserAsync(User user);
     Task UpdateUserAsync(User user);
     Task DeleteUserAsync(int id);
+
+    Task<User> GetUserByUsername(string username);
 }
 
 public class UserRepository : IUserRepository
@@ -49,4 +51,10 @@ public class UserRepository : IUserRepository
         _context.Users.Remove(user);
         await _context.SaveChangesAsync();
     }
+
+    public async Task<User> GetUserByUsername(string username)
+    {
+        return await _context.Users.FirstOrDefaultAsync(x => x.Username == username);
+    }
+
 }

@@ -9,7 +9,8 @@ public partial class User
 
     public string Username { get; set; } = null!;
 
-    public string Password { get; set; } = null!;
+    public byte[] PasswordHash { get; set; } = null!;
+    public byte[] PasswordSalt { get; set; } = null!;
 
     public string Email { get; set; } = null!;
 
@@ -22,4 +23,11 @@ public partial class User
     public virtual ICollection<Order> Orders { get; } = new List<Order>();
 
     public virtual ICollection<PurchaseHistory> PurchaseHistories { get; } = new List<PurchaseHistory>();
+}
+
+public class CreateUser
+{
+    public string Email { get; set; } = null!;
+    public string Password { get; set; } = null!;
+    public string Username { get; set; } = null!;
 }

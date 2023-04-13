@@ -33,7 +33,8 @@ public partial class AiImageStoreContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseMySQL("server=localhost;database=ai_image_store;user=root;password=");
+        => optionsBuilder.UseMySQL("server=localhost;database=aiimagestore;user=root;password=");
+    //    "dbConnection": "Server=tcp:eoghan.database.windows.net,1433;Initial Catalog=bradsDB;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;Authentication=\"Active\",\"Directory\",\"Default\";\""
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -225,9 +226,12 @@ public partial class AiImageStoreContext : DbContext
             entity.Property(e => e.Email)
                 .HasMaxLength(100)
                 .HasColumnName("email");
-            entity.Property(e => e.Password)
+            entity.Property(e => e.PasswordHash)
                 .HasMaxLength(255)
-                .HasColumnName("password");
+                .HasColumnName("password_hash");
+            entity.Property(e => e.PasswordSalt)
+    .HasMaxLength(255)
+    .HasColumnName("password_salt");
             entity.Property(e => e.ShippingAddress)
                 .HasMaxLength(255)
                 .HasColumnName("shipping_address");

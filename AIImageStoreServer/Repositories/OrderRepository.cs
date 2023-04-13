@@ -13,11 +13,9 @@ namespace AIImageStoreServer.Repositories
     }
     public class OrderRepository : IOrderRepository
     {
-        private readonly IOrderRepository _orderRepository;
-        private readonly RepositoryDBContext _dbContext;
-        public OrderRepository(IOrderRepository orderRepository, RepositoryDBContext dbContext)
+        private readonly AiImageStoreContext _dbContext;
+        public OrderRepository(AiImageStoreContext dbContext)
         {
-            _orderRepository = orderRepository;
             _dbContext = dbContext;
         }
 

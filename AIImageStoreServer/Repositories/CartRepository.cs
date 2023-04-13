@@ -10,7 +10,7 @@ namespace AIImageStoreServer.Repositories
         Task<Cart> DeleteCart(Cart cart);  
 
     }
-    public class CartRepository
+    public class CartRepository: ICartRepository
     {
         private readonly
             AiImageStoreContext _context;
@@ -27,11 +27,16 @@ namespace AIImageStoreServer.Repositories
             return cart;
         }
 
-        public async Task<Cart> AddToCart(Cart cart)
+        public async Task<Cart> AddToCart(Product product, Cart cart)
         {
             var updatedCart = cart;
             return updatedCart;
 
+        }
+
+        public Task<Cart> DeleteCart(Cart cart)
+        {
+            throw new NotImplementedException();
         }
     }
 }
