@@ -1,34 +1,79 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AIImageStoreServer.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AIImageStoreServer.Repositories
 {
     public interface ICategoryRepository
     {
-        Task<IActionResult> AddCategory();
-        Task<IActionResult> DeleteCategory(string CategoryId);
-        Task<IActionResult> EditCategoryName(string CategoryId);
+        Task<bool> AddCategory(Category category);
+        Task<bool> DeleteCategory(Category category);
+        Task<Category> EditCategory(Category category);
     }
     public class CategoryRepository
         : ICategoryRepository
     {
-
-        public CategoryRepository()
+        AiImageStoreContext _context;
+        public CategoryRepository(AiImageStoreContext context)
         {
+            _context = context;
         }
 
-        public Task<IActionResult> AddCategory()
+        public async Task<bool> AddCategory(Category category)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var newCategory = await _context.Categories.AddAsync(category);
+                await _context.SaveChangesAsync();
+
+                return true;
+                
+
+            }catch (Exception ex) {
+                return false;
+            }
         }
 
-        public Task<IActionResult> DeleteCategory(string CategoryId)
+        public async Task<bool> DeleteCategory(Category category)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var categoryForRemoval = await _context.Categories.FindAsync(category.CategoryId);
+                if (categoryForRemoval != null)
+                {
+                    _context.Categories.Remove(categoryForRemoval);
+                    await _context.SaveChangesAsync();
+
+                    return true;
+                }
+                return false;
+
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
 
-        public Task<IActionResult> EditCategoryName(string CategoryId)
+        public async Task<Category?> EditCategory(Category category)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var categoryForEdit = await _context.Categories.FindAsync(category.CategoryId);
+                if (categoryForEdit != null)
+                {
+                    categoryForEdit = category;
+                    await _context.SaveChangesAsync();
+
+
+                    return categoryForEdit;
+                }
+                return null;
+
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
     }
 }

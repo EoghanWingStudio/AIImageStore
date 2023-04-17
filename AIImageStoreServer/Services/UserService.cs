@@ -4,7 +4,7 @@ namespace AIImageStoreServer.Services
 {
     public interface IUserService
     {
-        Task<ServiceResult<string>> Login(string username, string password);
+        Task<ServiceResult<string>> Login(UserLogin userLogin);
         Task<ServiceResult<string>> Logout(string username);
         Task<ServiceResult<string>> CreateUser(CreateUser createUser);
         Task<User?> GetUserAsync(string username);
@@ -17,14 +17,22 @@ namespace AIImageStoreServer.Services
             _userRepository = userRepository;
         }
 
-        public async Task<ServiceResult<string>> Login(string username, string password)
+        public async Task<ServiceResult<string>> Login(UserLogin userLogin)
         {
-            var user = await _userRepository.GetUserByUsername(username);
+            var user = new User();
+            if (userLogin.Username != null)
+            {
+                user = await _userRepository.GetUserByUsername(userLogin.Username); 
+            }else
+            {
+                user = await _userRepository.GetUserByEmail(userLogin.Email);
+            }
+
             if (user == null)
             {
                 return new ServiceResult<string> { Success = false, Message = "Invalid username or password." };
             }
-            if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
+            if (!VerifyPasswordHash(userLogin.Password, user.PasswordHash, user.PasswordSalt))
             {
                 return new ServiceResult<string> { Success = false, Message = "Invalid username or password." };
             }

@@ -7,7 +7,7 @@ namespace AIImageStoreServer.Repositories
         Task<Cart> CreateCart(int userId);
         Task<Cart> AddToCart(Product product, Cart cart);
 
-        Task<Cart> DeleteCart(Cart cart);  
+        Task<Boolean> DeleteCart(Cart cart);  
 
     }
     public class CartRepository: ICartRepository
@@ -34,9 +34,17 @@ namespace AIImageStoreServer.Repositories
 
         }
 
-        public Task<Cart> DeleteCart(Cart cart)
+        public async Task<Boolean> DeleteCart(Cart cart)
         {
-            throw new NotImplementedException();
+           var cartInfo = await _context.Carts.FindAsync(cart.CartId);
+
+            if(cartInfo != null)
+            {
+                _context.Carts.Remove(cartInfo);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
         }
     }
 }

@@ -15,9 +15,9 @@ namespace AIImageStoreServer.Controllers
         {
             _userService = userService;
         }
-        // GET: api/<UserController>
+
         [HttpPost]
-        [Route("/GetUser")]
+        [Route("GetUser")]
         public async Task<IActionResult> GetUser([FromBody] string username)
         {
             var user = await _userService.GetUserAsync(username);
@@ -27,9 +27,8 @@ namespace AIImageStoreServer.Controllers
             return BadRequest();
         }
 
-        // Post: api/<UserController>
         [HttpPost]
-        [Route("/CreateUser")]
+        [Route("CreateUser")]
         public async Task<IActionResult> CreateUser([FromBody] CreateUser userDetails)
         {
             var createUser = await _userService.CreateUser(userDetails);
@@ -38,5 +37,34 @@ namespace AIImageStoreServer.Controllers
                 return Ok();
             return BadRequest();
         }
+
+        [HttpPost]
+        [Route("Login")]
+        public async Task<IActionResult> Login([FromBody] UserLogin userLogin)
+        {
+            if(userLogin.Email == null && userLogin.Username == null)
+                return BadRequest("Username or Email is Required");
+
+            var userLoggedIn = await _userService.Login(userLogin);
+
+            if (userLoggedIn != null)
+                return Ok(userLoggedIn);
+            return BadRequest();
+        }
+
+        [HttpPost]
+        [Route("Logout")]
+        public async Task<IActionResult> Logout([FromBody] UserLogin userLogin)
+        {
+            if (userLogin.Username == null)
+                return BadRequest("Username is Required");
+
+            var userLoggedIn = await _userService.Logout(userLogin.Username);
+
+            if (userLoggedIn != null)
+                return Ok(userLoggedIn);
+            return BadRequest();
+        }
+
     }
 }

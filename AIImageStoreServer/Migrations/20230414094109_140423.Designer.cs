@@ -3,6 +3,7 @@ using System;
 using AIImageStoreServer.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AIImageStoreServer.Migrations
 {
     [DbContext(typeof(AiImageStoreContext))]
-    partial class AiImageStoreContextModelSnapshot : ModelSnapshot
+    [Migration("20230414094109_140423")]
+    partial class _140423
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
