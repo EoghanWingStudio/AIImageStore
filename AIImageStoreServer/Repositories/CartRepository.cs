@@ -5,10 +5,10 @@ namespace AIImageStoreServer.Repositories
     public interface ICartRepository
     {
         Task<Cart> CreateCart(int userId);
-        Task<Cart> AddToCart(Product product, Cart cart);
+        Task<Cart?> UpdateCart(Cart cart);
 
-        Task<Boolean> DeleteCart(Cart cart);  
-
+        Task<Boolean> DeleteCart(Cart cart);
+        Task<Cart?> GetCartByIdAsync(int id);
     }
     public class CartRepository: ICartRepository
     {
@@ -27,14 +27,21 @@ namespace AIImageStoreServer.Repositories
             return cart;
         }
 
-        public async Task<Cart> AddToCart(Product product, Cart cart)
+        public async Task<Cart?> UpdateCart(Cart cart)
         {
-            var updatedCart = cart;
-            return updatedCart;
+            var cartInfo = await _context.Carts.FindAsync(cart.CartId);
+            if (cartInfo != null)
+            {
+                cartInfo = cart;
+                _context.Carts.Update(cartInfo);
+                await _context.SaveChangesAsync();
+                return cartInfo;
+            }
+            return null;
 
         }
 
-        public async Task<Boolean> DeleteCart(Cart cart)
+        public async Task<bool> DeleteCart(Cart cart)
         {
            var cartInfo = await _context.Carts.FindAsync(cart.CartId);
 
@@ -45,6 +52,13 @@ namespace AIImageStoreServer.Repositories
                 return true;
             }
             return false;
+        }
+
+        public async Task<Cart?> GetCartByIdAsync(int id)
+        {
+            var cart = await _context.Carts.FindAsync(id);
+            return cart;
+
         }
     }
 }
